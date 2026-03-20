@@ -1,0 +1,86 @@
+[
+  {
+    "timestamp": "2026-02-24T14:01:53.347271",
+    "message": "{'acne_location': 'Face', 'acne_duration': 'More than 3 months', 'acne_severity': 'Moderate', 'acne_pain': 'yes', 'acne_treatment': 'no', 'acne_symptoms': ['Redness'], 'acne_medical_history': 'no'}",
+    "category": "symptom_collection",
+    "response": "{'summary': ['Acne location: Face', 'Acne duration: More than 3 months', 'Acne severity: Moderate', 'Acne pain: yes', 'Previous treatment: no', 'Symptoms: Redness', 'Relevant medical history: no'], 'assessment': 'The patient is experiencing moderate acne with redness and pain, lasting more than three months without prior treatment. The condition may benefit from medical evaluation and guidance on suitable treatment options.', 'urgency': 'medium', 'recommendation': 'Schedule a dermatological consultation for further evaluation and to discuss appropriate treatment plans.'}",
+    "feedback": null
+  },
+  {
+    "timestamp": "2026-03-16T11:30:54.571836",
+    "message": "hi",
+    "category": "general",
+    "response": "Hello. How can I assist you with your medical questions or concerns today? Do you have a specific topic you'd like to discuss or symptoms you're experiencing? I'm here to provide information and support.",
+    "feedback": null
+  },
+  {
+    "timestamp": "2026-03-16T11:31:47.100444",
+    "message": "{'severity': 'Mild', 'duration': '<24h', 'vomit': 'no', 'blood': 'no', 'food': 'yes'}",
+    "category": "symptom_collection",
+    "response": "{'summary': ['Mild severity', 'Less than 24 hours duration', 'No vomit', 'No blood', 'Food intake'], 'assessment': \"The patient is experiencing mild symptoms that have lasted for less than 24 hours, with no signs of severe complications such as vomiting or blood. The patient's ability to keep food down is a positive indicator, but further evaluation is still necessary to determine the cause of the symptoms.\", 'urgency': 'low', 'recommendation': 'Schedule a routine appointment for further evaluation and monitor symptoms closely, seeking immediate medical attention if symptoms worsen or persist.'}",
+    "feedback": null
+  },
+  {
+    "timestamp": "2026-03-16T11:31:47.813391",
+    "message": "{'severity': 'Mild', 'duration': '<24h', 'vomit': 'no', 'blood': 'no', 'food': 'yes', 'previous': 'no'}",
+    "category": "symptom_collection",
+    "response": "{'summary': ['Mild symptoms', 'Duration less than 24 hours', 'No vomiting', 'No blood', 'Food intake', 'No previous conditions'], 'assessment': \"The patient is experiencing mild symptoms that have lasted for less than 24 hours, and they have been able to keep food down without vomiting or bleeding. The patient's condition does not appear to be severe at this time, but monitoring is still recommended.\", 'urgency': 'low', 'recommendation': 'Schedule a routine appointment with a doctor for further evaluation and monitoring.'}",
+    "feedback": null
+  },
+  {
+    "timestamp": "2026-03-17T12:55:07.754848",
+    "message": "hii",
+    "category": "general",
+    "response": "Hello. Is there something I can help you with, or would you like to talk about your health? I'm here to listen and provide information.",
+    "feedback": null
+  },
+  {
+    "timestamp": "2026-03-20T13:20:33.396830",
+    "message": "hi",
+    "category": "general",
+    "response": "Hello. How can I assist you with your medical questions or concerns today? Do you have a specific topic or condition you'd like to discuss, or are you looking for general health advice?",
+    "feedback": null
+  },
+  {
+    "timestamp": "2026-03-20T13:28:45.222393",
+    "message": "hi",
+    "category": "general",
+    "response": "Hello. How can I assist you with your medical questions or concerns today?",
+    "feedback": null
+  },
+  {
+    "timestamp": "2026-03-20T13:29:24.630664",
+    "message": "{'acne-location': 'Face', 'acne-duration': '3-6 months', 'acne-severity': 'Moderate', 'acne-treatment': 'no', 'acne-pain': 'yes'}",
+    "category": "symptom_collection",
+    "response": "{'summary': ['Acne location: Face', 'Acne duration: 3-6 months', 'Acne severity: Moderate', 'No current treatment', 'Pain present'], 'assessment': 'The patient is experiencing moderate acne on their face with associated pain, which has been ongoing for 3-6 months. The presence of pain and moderate severity suggest a need for medical evaluation and potential treatment.', 'urgency': 'medium', 'recommendation': 'Schedule a dermatological consultation to determine the best course of treatment for the acne, which may include topical or oral medications.'}",
+    "feedback": null
+  },
+  {
+    "timestamp": "2026-03-20T13:29:25.700244",
+    "message": "{'acne-location': 'Face', 'acne-duration': '3-6 months', 'acne-severity': 'Moderate', 'acne-treatment': 'no', 'acne-pain': 'yes', 'acne-scars': 'yes'}",
+    "category": "symptom_collection",
+    "response": "{'summary': ['Acne on face', 'Duration: 3-6 months', 'Moderate severity', 'No treatment', 'Painful', 'Scarring'], 'assessment': \"The patient is experiencing moderate acne on their face, which has been persistent for 3-6 months and is causing pain and scarring. The patient's condition requires attention to prevent further scarring and to alleviate symptoms.\", 'urgency': 'medium', 'recommendation': 'Schedule a dermatological consultation to discuss treatment options, such as topical or oral antibiotics, and provide guidance on skincare and scar prevention.'}",
+    "feedback": null
+  },
+  {
+    "timestamp": "2026-03-20T14:07:54.299426",
+    "message": "hi",
+    "category": "general",
+    "response": "Hello. How can I assist you with your medical questions or concerns today?",
+    "feedback": null
+  },
+  {
+    "timestamp": "2026-03-20T14:08:08.513288",
+    "message": "{'fever': 'yes', 'duration': '<24h', 'severity': 'Moderate', 'symptoms': ['Body aches'], 'medication': 'yes'}",
+    "category": "symptom_collection",
+    "response": "{'summary': ['Fever for less than 24 hours', 'Moderate severity', 'Body aches', 'Currently taking medication'], 'assessment': \"The patient is experiencing a moderate fever with body aches, which could be indicative of an underlying infection. The patient's current medication regimen may be contributing to their symptoms or attempting to alleviate them.\", 'urgency': 'medium', 'recommendation': \"Schedule a doctor's visit within the next 24 hours to determine the cause of the fever and assess the effectiveness of the current medication.\"}",
+    "feedback": null
+  },
+  {
+    "timestamp": "2026-03-20T14:08:08.575003",
+    "message": "{'fever': 'yes', 'duration': '<24h', 'severity': 'Moderate', 'symptoms': ['Body aches'], 'medication': 'yes', 'exposure': 'yes'}",
+    "category": "symptom_collection",
+    "response": "{'summary': ['Fever for less than 24 hours', 'Moderate severity', 'Body aches', 'Recent exposure', 'Currently on medication'], 'assessment': 'The patient is experiencing moderate symptoms with a recent exposure, and is currently on medication. The fever and body aches suggest a possible infection that needs further evaluation.', 'urgency': 'medium', 'recommendation': 'Seek medical attention within the next 24 hours for further evaluation and guidance on managing symptoms and medication.'}",
+    "feedback": null
+  }
+]
