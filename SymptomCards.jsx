@@ -42,28 +42,62 @@ export default function SymptomCards({ onComplete }) {
   };
 
   const submit = async () => {
-    const res = await fetch('http://localhost:5000/api/symptom-collect', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ answers })
-    });
-    const data = await res.json();
-    setResult(data);
-    onComplete && onComplete(data);
+    try {
+      // Show loading state
+      setResult({ loading: true });
+      
+      const res = await fetch('http://localhost:5000/api/symptom-collect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          answers,
+          language: localStorage.getItem('language') || 'en'
+        })
+      });
+      
+      if (!res.ok) {
+        throw new Error('Failed to analyze symptoms');
+      }
+      
+      const data = await res.json();
+      setResult(data);
+      
+      // Pass the answers to parent for further processing
+      if (onComplete) {
+        onComplete(answers);
+      }
+    } catch (error) {
+      console.error('Symptom collection error:', error);
+      setResult({ error: 'Failed to analyze symptoms. Please try again.' });
+    }
   };
 
   if (result) {
-    return (
-      <div className="result-card">
-        <h2>Assessment</h2>
-        <div className={`urgency ${result.urgency}`}>{result.urgency.toUpperCase()}</div>
-        <div className="summary">
-          {result.summary.map((s, i) => <div key={i}>• {s}</div>)}
+    if (result.loading) {
+      return (
+        <div className="symptom-cards">
+          <div className="card">
+            <h3>Analyzing your symptoms...</h3>
+            <div className="loading-spinner"></div>
+          </div>
         </div>
-        <p>{result.assessment}</p>
-        <div className="recommendation">💡 {result.recommendation}</div>
-      </div>
-    );
+      );
+    }
+    
+    if (result.error) {
+      return (
+        <div className="symptom-cards">
+          <div className="card">
+            <h3>Error</h3>
+            <p>{result.error}</p>
+            <button onClick={() => setResult(null)}>Try Again</button>
+          </div>
+        </div>
+      );
+    }
+    
+    // Close modal and let parent handle the display
+    return null;
   }
 
   if (!flow.length) return <div>Loading...</div>;

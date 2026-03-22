@@ -7,7 +7,7 @@
 }
 
 .doctor-recommendations h3 {
-  color: #21666d;
+  color: #10b981;
   margin: 0 0 5px 0;
   font-size: 24px;
 }
@@ -27,7 +27,7 @@
 
 .doctor-card {
   background: #f9f9f9;
-  border: 2px solid #21666d;
+  border: 2px solid #10b981;
   border-radius: 12px;
   padding: 20px;
   transition: all 0.3s;
@@ -35,7 +35,7 @@
 
 .doctor-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(33, 102, 109, 0.2);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
 }
 
 .doctor-header {
@@ -44,13 +44,13 @@
   align-items: center;
   margin-bottom: 15px;
   padding-bottom: 15px;
-  border-bottom: 2px solid #21666d;
+  border-bottom: 2px solid #10b981;
 }
 
 .doctor-name {
   font-size: 18px;
   font-weight: 600;
-  color: #21666d;
+  color: #10b981;
   flex: 1;
 }
 
@@ -101,12 +101,12 @@
 }
 
 .btn-directions {
-  background: #21666d;
+  background: #10b981;
   color: white;
 }
 
 .btn-directions:hover {
-  background: #1a5158;
+  background: #059669;
   transform: scale(1.05);
 }
 
