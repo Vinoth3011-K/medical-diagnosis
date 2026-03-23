@@ -4,8 +4,8 @@ import requests
 import os
 from datetime import datetime
 from dotenv import load_dotenv
-import hashlib
 import secrets
+from database import Database
 
 load_dotenv()
 
@@ -15,10 +15,7 @@ CORS(app)
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
 
-users_db = {}
-
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
+db = Database()
 
 @app.route('/api/signup', methods=['POST'])
 def signup():
@@ -30,20 +27,15 @@ def signup():
     if not email or not password or not name:
         return jsonify({'error': 'All fields are required'}), 400
     
-    if email in users_db:
-        return jsonify({'error': 'Email already exists'}), 400
+    user = db.create_user(name, email, password)
     
-    users_db[email] = {
-        'email': email,
-        'password': hash_password(password),
-        'name': name,
-        'created_at': datetime.now().isoformat()
-    }
+    if not user:
+        return jsonify({'error': 'Email already exists'}), 400
     
     token = secrets.token_urlsafe(32)
     
     return jsonify({
-        'user': {'email': email, 'name': name},
+        'user': {'id': user['id'], 'email': user['email'], 'name': user['name']},
         'token': token
     })
 
@@ -56,14 +48,15 @@ def login():
     if not email or not password:
         return jsonify({'error': 'Email and password required'}), 400
     
-    user = users_db.get(email)
-    if not user or user['password'] != hash_password(password):
+    user = db.verify_user(email, password)
+    
+    if not user:
         return jsonify({'error': 'Invalid email or password'}), 401
     
     token = secrets.token_urlsafe(32)
     
     return jsonify({
-        'user': {'email': user['email'], 'name': user['name']},
+        'user': {'id': user['id'], 'email': user['email'], 'name': user['name']},
         'token': token
     })
 

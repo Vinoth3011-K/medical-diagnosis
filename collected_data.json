@@ -481,5 +481,33 @@
     "category": "general",
     "response": "Vanakkam, how can I help you today?",
     "feedback": null
+  },
+  {
+    "timestamp": "2026-03-23T18:28:46.679128",
+    "message": "hi",
+    "category": "general",
+    "response": "Hello, how can I help you today?",
+    "feedback": null
+  },
+  {
+    "timestamp": "2026-03-23T18:29:13.361369",
+    "message": "{'fever_severity': '101.5-103F', 'fever_duration': 'less than 24 hours', 'headache': 'yes', 'sore_throat': 'no', 'breathing_difficulty': 'no'}",
+    "category": "symptom_collection",
+    "response": "{'severity': 'MILD', 'severity_score': 4, 'severity_reasoning': 'The patient has a fever with a temperature range of 101.5-103F, which is considered low-grade. The duration of the fever is less than 24 hours, and there are no red flags or severe symptoms reported. The presence of a headache is a common symptom associated with many conditions, but in this case, it does not indicate a severe condition.', 'urgency': 'low', 'conditions': [{'name': 'Viral infection', 'probability': '60%', 'reasoning': \"The patient's symptoms, such as fever and headache, are consistent with a viral infection, which is a common cause of these symptoms.\"}, {'name': 'Bacterial infection', 'probability': '20%', 'reasoning': \"Although less likely, a bacterial infection could also be the cause of the patient's symptoms, especially if the fever persists or worsens.\"}, {'name': 'Influenza', 'probability': '20%', 'reasoning': \"The patient's symptoms, such as fever and headache, are also consistent with influenza, which is a common condition during flu season.\"}], 'actions': [\"Schedule a doctor's appointment if symptoms worsen or persist\", 'Take over-the-counter medication to reduce fever and headache', 'Stay hydrated by drinking plenty of fluids'], 'home_care': ['Rest and avoid strenuous activities', 'Use a humidifier to relieve congestion', 'Practice good hygiene to prevent the spread of infection'], 'warning_signs': ['Difficulty breathing', 'Chest pain or pressure', 'Severe headache or confusion'], 'specialty': 'Primary care', 'summary': ['The patient has a low-grade fever with a headache', 'The symptoms are consistent with a viral or bacterial infection', \"The patient should schedule a doctor's appointment if symptoms worsen or persist\"], 'assessment': \"The patient's symptoms are consistent with a mild viral or bacterial infection. The patient should be monitored for worsening symptoms and seek medical attention if necessary.\", 'recommendation': \"The patient should schedule a doctor's appointment if symptoms worsen or persist, and follow home care recommendations to manage symptoms and prevent complications.\", 'severity_indicators': {'fever_level': 'none', 'fever_severity': 'none', 'duration_concern': 'low', 'symptom_count': 0, 'red_flags': []}, 'language': 'en'}",
+    "feedback": null
+  },
+  {
+    "timestamp": "2026-03-23T18:30:20.323433",
+    "message": "yen nee immediate actionc object kuduthuruka",
+    "category": "general",
+    "response": "Seri, unga problem enna? Nee enna issue face pannurukinga? Immediate action nu solriye, naan try panniten.",
+    "feedback": null
+  },
+  {
+    "timestamp": "2026-03-23T18:31:24.023214",
+    "message": "{'pain': 'no', 'location': 'Head', 'duration': '<24h', 'breathing': 'no', 'symptoms': ['Fever'], 'injury': 'no'}",
+    "category": "symptom_collection",
+    "response": "{'severity': 'MILD', 'severity_score': 2, 'severity_reasoning': 'The patient has a fever but no other severe symptoms, and the duration is less than 24 hours. The fever level and severity are reported as none, and there are no red flags.', 'urgency': 'low', 'conditions': [{'name': 'Viral Infection', 'probability': '60%', 'reasoning': 'The presence of fever and the short duration suggest a possible viral infection.'}, {'name': 'Sinusitis', 'probability': '20%', 'reasoning': 'The location of the symptoms in the head could indicate sinusitis, especially if the fever is accompanied by other symptoms like nasal congestion or headache.'}, {'name': 'Mild Head Cold', 'probability': '20%', 'reasoning': 'The symptoms could also be indicative of a mild head cold, which is a common and usually self-limiting condition.'}], 'actions': ['Monitor temperature and symptoms', 'Stay hydrated by drinking plenty of fluids'], 'home_care': ['Rest and avoid strenuous activities', 'Use over-the-counter medications like acetaminophen or ibuprofen to manage fever and discomfort'], 'warning_signs': ['Difficulty breathing', 'Severe headache or confusion', 'Fever that lasts more than 3 days'], 'specialty': 'Primary Care or Infectious Disease', 'summary': ['Fever with no other severe symptoms', 'Short duration of less than 24 hours', 'No red flags or severe symptoms'], 'assessment': \"The patient's condition appears to be mild and likely self-limiting, but monitoring and possible follow-up with a healthcare provider are recommended to ensure the condition does not worsen.\", 'recommendation': 'Schedule a follow-up appointment with a primary care physician if symptoms persist or worsen, and consider seeking immediate medical attention if severe symptoms develop.', 'severity_indicators': {'fever_level': 'none', 'fever_severity': 'none', 'duration_concern': 'low', 'symptom_count': 0, 'red_flags': []}, 'language': 'en'}",
+    "feedback": null
   }
 ]

@@ -175,28 +175,40 @@ function ChatBot({ user, onLogout }) {
         assessmentText += `\n`
       }
 
-      if (data.actions && data.actions.length > 0) {
-        assessmentText += `Immediate Actions:\n`
-        data.actions.forEach((a, i) => {
-          assessmentText += `${i + 1}. ${a}\n`
-        })
-        assessmentText += `\n`
+      if (data.actions) {
+        const actionsList = Array.isArray(data.actions) ? data.actions : Object.values(data.actions)
+        if (actionsList.length > 0) {
+          assessmentText += `Immediate Actions:\n`
+          actionsList.forEach((a, i) => {
+            const actionText = typeof a === 'string' ? a : JSON.stringify(a)
+            assessmentText += `${i + 1}. ${actionText}\n`
+          })
+          assessmentText += `\n`
+        }
       }
 
-      if (data.home_care && data.home_care.length > 0) {
-        assessmentText += `Home Care:\n`
-        data.home_care.forEach((h, i) => {
-          assessmentText += `• ${h}\n`
-        })
-        assessmentText += `\n`
+      if (data.home_care) {
+        const homeCareList = Array.isArray(data.home_care) ? data.home_care : Object.values(data.home_care)
+        if (homeCareList.length > 0) {
+          assessmentText += `Home Care:\n`
+          homeCareList.forEach((h, i) => {
+            const careText = typeof h === 'string' ? h : JSON.stringify(h)
+            assessmentText += `• ${careText}\n`
+          })
+          assessmentText += `\n`
+        }
       }
 
-      if (data.warning_signs && data.warning_signs.length > 0) {
-        assessmentText += `⚠️ Warning Signs to Watch:\n`
-        data.warning_signs.forEach((w, i) => {
-          assessmentText += `• ${w}\n`
-        })
-        assessmentText += `\n`
+      if (data.warning_signs) {
+        const warningsList = Array.isArray(data.warning_signs) ? data.warning_signs : Object.values(data.warning_signs)
+        if (warningsList.length > 0) {
+          assessmentText += `⚠️ Warning Signs to Watch:\n`
+          warningsList.forEach((w, i) => {
+            const warningText = typeof w === 'string' ? w : JSON.stringify(w)
+            assessmentText += `• ${warningText}\n`
+          })
+          assessmentText += `\n`
+        }
       }
 
       if (data.specialty) {
