@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { login, signup } from './api'
 import './Login.css'
 
 function Login({ onLogin }) {
@@ -25,7 +26,6 @@ function Login({ onLogin }) {
     setError('')
     setLoading(true)
 
-    // Validation
     if (!formData.email || !formData.password) {
       setError('Please fill in all fields')
       setLoading(false)
@@ -51,24 +51,15 @@ function Login({ onLogin }) {
     }
 
     try {
-      const endpoint = isSignup ? '/api/signup' : '/api/login'
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      })
+      const response = isSignup 
+        ? await signup({ email: formData.email, password: formData.password, name: formData.name })
+        : await login({ email: formData.email, password: formData.password })
 
-      const data = await response.json()
-
-      if (response.ok) {
-        localStorage.setItem('user', JSON.stringify(data.user))
-        localStorage.setItem('token', data.token)
-        onLogin(data.user)
-      } else {
-        setError(data.error || 'Authentication failed')
-      }
+      localStorage.setItem('token', response.data.token)
+      localStorage.setItem('user', JSON.stringify(response.data.user))
+      onLogin(response.data.user)
     } catch (err) {
-      setError('Connection error. Please try again.')
+      setError(err.response?.data?.error || 'Authentication failed')
     }
 
     setLoading(false)

@@ -115,6 +115,30 @@ function ChatBot({ onLogout }) {
     }
   }
 
+  const requestLocation = () => {
+    if (navigator.geolocation) {
+      setIsLoading(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const loc = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+          setUserLocation(loc);
+          setIsLoading(false);
+          addMessage('bot', '📍 Location confirmed. I can now search for the nearest hospitals for you.');
+        },
+        (error) => {
+          setIsLoading(false);
+          console.error('Location error:', error);
+          addMessage('bot', '⚠️ Location access denied. Please enable it in your browser settings to find nearby care.');
+        }
+      );
+    } else {
+      addMessage('bot', '❌ Geolocation is not supported by your browser.');
+    }
+  };
+
   const handleSend = async () => {
     if (!input.trim()) return
 
@@ -141,6 +165,12 @@ function ChatBot({ onLogout }) {
     }
   }
 
+  const clearChat = () => {
+    setMessages([{ sender: 'bot', text: 'Hello! I\'m your medical diagnosis assistant. How can I help you today?', timestamp: new Date() }])
+    setDoctors([])
+    setShowDoctors(false)
+  }
+
   const handleSymptomComplete = async (result) => {
     setShowSymptomCards(false)
     setIsLoading(true)
@@ -158,69 +188,20 @@ function ChatBot({ onLogout }) {
       
       console.log('Analysis result:', data)
 
-      // Build assessment message
-      let assessmentText = `📋 Medical Assessment:\n\n`
-      assessmentText += `Severity: ${data.severity || 'MODERATE'} (Score: ${data.severity_score || 5}/10)\n`
-      assessmentText += `Urgency: ${(data.urgency || 'medium').toUpperCase()}\n\n`
+      // Use the structured data directly for the result card
+      const introMessage = `I have analyzed your symptoms and generated a health assessment for you.`
       
-      if (data.severity_reasoning) {
-        assessmentText += `Analysis: ${data.severity_reasoning}\n\n`
-      }
-
-      if (data.conditions && data.conditions.length > 0) {
-        assessmentText += `Possible Conditions:\n`
-        data.conditions.forEach((c, i) => {
-          assessmentText += `${i + 1}. ${c.name} (${c.probability}) - ${c.reasoning}\n`
-        })
-        assessmentText += `\n`
-      }
-
-      if (data.actions) {
-        const actionsList = Array.isArray(data.actions) ? data.actions : Object.values(data.actions)
-        if (actionsList.length > 0) {
-          assessmentText += `Immediate Actions:\n`
-          actionsList.forEach((a, i) => {
-            const actionText = typeof a === 'string' ? a : JSON.stringify(a)
-            assessmentText += `${i + 1}. ${actionText}\n`
-          })
-          assessmentText += `\n`
-        }
-      }
-
-      if (data.home_care) {
-        const homeCareList = Array.isArray(data.home_care) ? data.home_care : Object.values(data.home_care)
-        if (homeCareList.length > 0) {
-          assessmentText += `Home Care:\n`
-          homeCareList.forEach((h, i) => {
-            const careText = typeof h === 'string' ? h : JSON.stringify(h)
-            assessmentText += `• ${careText}\n`
-          })
-          assessmentText += `\n`
-        }
-      }
-
-      if (data.warning_signs) {
-        const warningsList = Array.isArray(data.warning_signs) ? data.warning_signs : Object.values(data.warning_signs)
-        if (warningsList.length > 0) {
-          assessmentText += `⚠️ Warning Signs to Watch:\n`
-          warningsList.forEach((w, i) => {
-            const warningText = typeof w === 'string' ? w : JSON.stringify(w)
-            assessmentText += `• ${warningText}\n`
-          })
-          assessmentText += `\n`
-        }
-      }
-
-      if (data.specialty) {
-        assessmentText += `Recommended Specialty: ${data.specialty}\n\n`
-      }
-
-      addMessage('bot', assessmentText, {
+      addMessage('bot', introMessage, {
         urgency: data.urgency || 'medium',
         severity: data.severity || 'MODERATE',
         summary: data.summary || ['Symptom analysis completed'],
         assessment: data.assessment || data.severity_reasoning || 'Based on your symptoms, please monitor your condition.',
-        recommendation: data.recommendation || 'Please consult a healthcare professional if symptoms persist.'
+        recommendation: data.recommendation || 'Please consult a healthcare professional if symptoms persist.',
+        conditions: data.conditions,
+        actions: data.actions,
+        home_care: data.home_care,
+        warning_signs: data.warning_signs,
+        specialty: data.specialty
       })
 
       // Show doctor recommendations if urgency is medium or higher
@@ -294,6 +275,16 @@ function ChatBot({ onLogout }) {
           </svg>
         </button>
         <button 
+          className="clear-chat-btn"
+          onClick={clearChat}
+          title="Clear Chat"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M3 6h18"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+        </button>
+        <button 
           className="logout-btn"
           onClick={onLogout}
           title="Logout"
@@ -327,40 +318,84 @@ function ChatBot({ onLogout }) {
                 <p>{msg.text}</p>
               )}
               {msg.data && msg.data.urgency && (
-                <div className="diagnosis-result">
-                  <div className="result-header">
-                    <h3>Health Assessment</h3>
-                    <span className={`urgency-badge ${msg.data.urgency}`}>
-                      {msg.data.urgency === 'low' && '✅'}
-                      {msg.data.urgency === 'medium' && '⚠️'}
-                      {msg.data.urgency === 'high' && '🚨'}
-                      {msg.data.urgency.toUpperCase()}
-                    </span>
+                <div className={`assessment-card ${msg.data.urgency}`}>
+                  <div className="assessment-hero">
+                    <div className="hero-status">
+                      <div className="status-indicator">
+                        <span className="pulse-dot"></span>
+                        <span className="urgency-label">{(msg.data.urgency || 'medium').toUpperCase()} RISK</span>
+                      </div>
+                      <h3>Health Assessment</h3>
+                    </div>
+                    <div className="severity-score">
+                      <svg viewBox="0 0 36 36" className="circular-chart">
+                        <path className="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <path className="circle" strokeDasharray={`${msg.data.severity_score * 10 || 50}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <text x="18" y="20.35" className="percentage">{msg.data.severity_score || 5}</text>
+                      </svg>
+                      <span>Severity</span>
+                    </div>
                   </div>
                   
-                  <div className="summary-section">
-                    <h4>Key Findings</h4>
-                    <div className="summary-grid">
-                      {msg.data.summary.map((s, i) => (
-                        <div key={i} className="summary-item">
-                          <span className="bullet">•</span>
-                          <span>{s}</span>
+                  <div className="assessment-body">
+                    <div className="findings-grid">
+                      {msg.data.summary && msg.data.summary.map((s, i) => (
+                        <div key={i} className="finding-tag">
+                          <span className="tag-icon">✓</span>
+                          {s}
                         </div>
                       ))}
                     </div>
+
+                    <div className="conditions-section">
+                      <h4>Potential Conditions</h4>
+                      {msg.data.conditions && msg.data.conditions.map((c, i) => (
+                        <div key={i} className="condition-row">
+                          <div className="condition-info">
+                            <span className="condition-name">{c.name}</span>
+                            <span className="condition-prob">{c.probability}</span>
+                          </div>
+                          <div className="progress-bar-bg">
+                            <div className="progress-bar-fill" style={{ width: c.probability }}></div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="care-grid">
+                      <div className="care-column">
+                        <h4>Immediate Care</h4>
+                        <ul>
+                          {msg.data.actions && msg.data.actions.map((a, i) => <li key={i}>{a}</li>)}
+                          {msg.data.home_care && msg.data.home_care.map((h, i) => <li key={i}>{h}</li>)}
+                        </ul>
+                      </div>
+                      <div className="care-column warnings">
+                        <h4>⚠️ Warning Signs</h4>
+                        <ul>
+                          {msg.data.warning_signs && msg.data.warning_signs.map((w, i) => <li key={i}>{w}</li>)}
+                        </ul>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="assessment-text">
-                    <h4>Medical Assessment</h4>
-                    <p>{msg.data.assessment}</p>
-                  </div>
-                  
-                  <div className="recommendation-section">
-                    <div className="recommendation-header">
-                      <span className="icon">👨‍⚕️</span>
-                      <h4>Recommendation</h4>
+                  <div className="recommendation-panel">
+                    <div className="doctor-badge">
+                      <span className="dr-icon">👨‍⚕️</span>
                     </div>
-                    <p>{msg.data.recommendation}</p>
+                    <div className="recommendation-content">
+                      <p>{msg.data.recommendation}</p>
+                      <div className="specialty-match">
+                        <span className="match-label">Recommended:</span>
+                        <strong>{msg.data.specialty || 'General Care'}</strong>
+                      </div>
+                      
+                      {!userLocation && (
+                        <button className="location-request-btn" onClick={requestLocation}>
+                          📍 Enable Location to Find Nearest Hospital
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
@@ -391,45 +426,101 @@ function ChatBot({ onLogout }) {
       )}
 
       {showDoctors && doctors.length > 0 && (
-        <div className="doctors-panel">
-          <div className="doctors-header">
-            <h3>🏥 Recommended Doctors & Hospitals</h3>
-            <button className="close-doctors" onClick={() => setShowDoctors(false)}>×</button>
-          </div>
-          <div className="doctors-list">
-            {doctors.map((doctor, idx) => (
-              <div key={idx} className="doctor-card">
-                <div className="doctor-info">
-                  <h4>{doctor.name}</h4>
-                  <div className="rating">
-                    <span className="stars">⭐ {doctor.rating}</span>
-                    <span className="reviews">({doctor.total_ratings || 0} reviews)</span>
-                  </div>
-                  <p className="address">📍 {doctor.address}</p>
-                  <p className="distance">📍 {doctor.distance}</p>
-                  {doctor.phone && doctor.phone !== 'N/A' && (
-                    <p className="phone">📞 {doctor.phone}</p>
-                  )}
-                  {doctor.open_now !== null && (
-                    <p className={`status ${doctor.open_now ? 'open' : 'closed'}`}>
-                      {doctor.open_now ? '✅ Open Now' : '🔴 Closed'}
-                    </p>
-                  )}
-                </div>
-                <div className="doctor-actions">
-                  {doctor.maps_url && (
-                    <a href={doctor.maps_url} target="_blank" rel="noopener noreferrer" className="btn-maps">
-                      🗺️ Directions
-                    </a>
-                  )}
-                  {doctor.booking_url && (
-                    <a href={doctor.booking_url} target="_blank" rel="noopener noreferrer" className="btn-book">
-                      📅 Book Appointment
-                    </a>
-                  )}
+        <div className="care-overlay">
+          <div className="care-panel">
+            <div className="care-header">
+              <div className="care-title">
+                <span className="care-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M19 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3H5C3.34 2 2 3.34 2 5v6c0 1.66 1.34 3 3 3"/>
+                    <path d="M5 14v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"/>
+                    <path d="M10 9h4"/>
+                    <path d="M12 7v4"/>
+                  </svg>
+                </span>
+                <div>
+                  <h3>Nearby Medical Care</h3>
+                  <p>Based on your current symptoms & location</p>
                 </div>
               </div>
-            ))}
+              <button className="close-care" onClick={() => setShowDoctors(false)}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+            
+            <div className="care-list">
+              {doctors.map((doctor, idx) => (
+                <div key={idx} className="care-card">
+                  <div className="care-status-badge">
+                    <span className={doctor.open_now ? 'open' : 'closed'}>
+                      {doctor.open_now ? 'AVAILABLE' : 'CLOSED'}
+                    </span>
+                  </div>
+                  
+                  <div className="care-info">
+                    <div className="care-main">
+                      <h4>{doctor.name}</h4>
+                      <div className="care-rating">
+                        <span className="rating-star">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" strokeWidth="2">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                          </svg>
+                        </span>
+                        <span className="rating-value">{doctor.rating}</span>
+                        <span className="rating-count">({doctor.total_ratings || 0})</span>
+                      </div>
+                    </div>
+                    
+                    <div className="care-details">
+                      <div className="detail-item">
+                        <span className="icon">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                          </svg>
+                        </span>
+                        <p>{doctor.address}</p>
+                      </div>
+                      <div className="detail-item">
+                        <span className="icon">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="m20 9.5-1.5 1.5M14 6.5l-1.5-1.5M3 21l3-3M21 3l-3 3M16 11l-5 5M11 16l-5 5m10-10L21 3m-5 8L3 21m8-5L14 19M16 11l-3-3M8 13l-3-3"/>
+                          </svg>
+                        </span>
+                        <p>{doctor.distance} away</p>
+                      </div>
+                      {doctor.phone && doctor.phone !== 'N/A' && (
+                        <div className="detail-item">
+                          <span className="icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l2.18-2.18a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                          </span>
+                          <p>{doctor.phone}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="care-actions">
+                    {doctor.maps_url && (
+                      <a href={doctor.maps_url} target="_blank" rel="noopener noreferrer" className="action-link maps">
+                        Directions
+                      </a>
+                    )}
+                    {doctor.booking_url ? (
+                      <a href={doctor.booking_url} target="_blank" rel="noopener noreferrer" className="action-link book">
+                        Book Now
+                      </a>
+                    ) : (
+                      <button className="action-link call">Call Hospital</button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}

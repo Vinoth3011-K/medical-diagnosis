@@ -9,7 +9,7 @@ export default function SymptomCards({ onComplete }) {
   const [result, setResult] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/symptom-flow?message=${encodeURIComponent(window.lastUserMessage || '')}`)
+    fetch(`/api/symptom-flow?message=${encodeURIComponent(window.lastUserMessage || '')}`)
       .then(r => r.json())
       .then(data => setFlow(data.flow));
   }, []);
@@ -46,7 +46,7 @@ export default function SymptomCards({ onComplete }) {
       // Show loading state
       setResult({ loading: true });
       
-      const res = await fetch('http://localhost:5000/api/symptom-collect', {
+      const res = await fetch('/api/symptom-collect', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
