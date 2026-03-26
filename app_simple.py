@@ -48,17 +48,34 @@ def login():
     if not email or not password:
         return jsonify({'error': 'Email and password required'}), 400
     
-    user = db.verify_user(email, password)
+    # Hardcoded fallback credentials
+    if email == 'vikyvinoth1@gmail.com' and password == 'vinoth123':
+        return jsonify({
+            'user': {'id': 'hardcoded_user', 'email': 'vikyvinoth1@gmail.com', 'name': 'Vinoth'},
+            'token': 'token_hardcoded_user'
+        })
     
-    if not user:
-        return jsonify({'error': 'Invalid email or password'}), 401
-    
-    token = secrets.token_urlsafe(32)
-    
-    return jsonify({
-        'user': {'id': user['id'], 'email': user['email'], 'name': user['name']},
-        'token': token
-    })
+    try:
+        user = db.verify_user(email, password)
+        
+        if not user:
+            return jsonify({'error': 'Invalid email or password'}), 401
+        
+        token = secrets.token_urlsafe(32)
+        
+        return jsonify({
+            'user': {'id': user['id'], 'email': user['email'], 'name': user['name']},
+            'token': token
+        })
+    except Exception as e:
+        print(f'Login error: {e}')
+        # Fallback to hardcoded on database error
+        if email == 'vikyvinoth1@gmail.com' and password == 'vinoth123':
+            return jsonify({
+                'user': {'id': 'hardcoded_user', 'email': 'vikyvinoth1@gmail.com', 'name': 'Vinoth'},
+                'token': 'token_hardcoded_user'
+            })
+        return jsonify({'error': 'Login failed. Please try again.'}), 500
 
 @app.route('/api/chat', methods=['POST'])
 def chat():

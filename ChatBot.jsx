@@ -3,7 +3,7 @@ import axios from 'axios'
 import './ChatBot.css'
 import SymptomCards from './SymptomCards'
 
-function ChatBot({ user, onLogout }) {
+function ChatBot({ onLogout }) {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [showSymptomCards, setShowSymptomCards] = useState(false)
@@ -270,7 +270,7 @@ function ChatBot({ user, onLogout }) {
         <img src="https://img.freepik.com/premium-vector/health-care-medical-logo-vector-design_990473-2554.jpg" alt="Logo" className="logo" />
         <div className="title-section">
           <h1>Medical Diagnosis Assistant</h1>
-          <p>Welcome, {user?.name || user?.email}!</p>
+          <p>Welcome to Medical Diagnosis Assistant!</p>
         </div>
         <button 
           className={`voice-mode-toggle ${voiceMode ? 'active' : ''}`}
